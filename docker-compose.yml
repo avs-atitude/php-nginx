@@ -3,8 +3,8 @@ version: '3.8'
 services:
   app:
     build:
-      context: ./docker
-      dockerfile: Dockerfile
+      context: ./config/php.dockerfile
+      dockerfile: ./config/php.dockerfile
     container_name: app
     restart: always
     working_dir: /var/www
@@ -18,4 +18,26 @@ services:
       - 8000:80
     volumes:
       - ./src:/var/www
-      - ./docker/nginx:/etc/nginx/conf.d
+      - ./config/nginx:/etc/nginx/conf.d
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: database
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=app_development
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./config/dbdata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - 8001:80
+    environment:
+      - PMA_ARBITRARY=1
+    links:
+      - db
