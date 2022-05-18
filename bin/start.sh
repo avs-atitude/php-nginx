@@ -1,1 +1,1 @@
-mkdir -p ./data/mysql-db && docker-compose up
+mkdir -p ./data/mysql-db && docker-compose config && docker-compose up
